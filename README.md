@@ -50,3 +50,11 @@
     2. webpack -p设置的process.env.NODE_ENV环境变量，是用于编译后的代码的，只有在打包后的代码中，这一环境变量才是有效的。如果在 webpack 配置文件中引用此环境变量，得到的是 undefined，可以参见 #2537。但是，有时我们确实需要在 webpack 配置文件中使用 process.env.NODE_ENV，怎么办呢？一个方法是运行NODE_ENV='production' webpack -p命令，不过这个命令在Windows中是会出问题的。为了解决兼容问题，我们采用 cross-env 解决跨平台的问题。
       > * $ npm i --save-dev cross-env
       > * [chunkhash]不能和 HMR 一起使用，换句话说，不应该在开发环境中使用 [chunkhash] (或者 [hash])，这会导致许多问题
+  * 使用 CommonsChunkPlugin 插件来将相同的部分提取出来放到一个单独的模块中
+  * 可以选择以动态引入的方式来实现代码分离，借助 import() 实现之
+    > * 可以选择在需要的时候才加载相应的模块，减少了应用初始化时加载大量暂不需要的模块的压力
+  * 缓存 (caching)
+    > * [chunkhash] 是内容相关的，只要内容发生了改变，构建后文件名的 hash 就会发生改变
+    > * 包含 vendor 的 CommonsChunkPlugin 实例必须在包含 runtime 的之前，否则会报错
+  * Shimming
+   > * 可以将 shim 简单理解为是用于兼容 API 的小型库
